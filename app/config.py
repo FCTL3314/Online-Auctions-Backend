@@ -7,6 +7,8 @@ load_dotenv()
 class Config(BaseSettings):
     DEBUG: bool = False
 
+    SECRET_KEY: str
+
     DATABASE_DRIVER: str = "postgresql+asyncpg"
     DATABASE_NAME: str
     DATABASE_HOST: str

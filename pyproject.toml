@@ -19,7 +19,17 @@ pydantic-settings = "^2.0.3"
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.0.291"
 black = "^23.9.1"
+mypy = "^1.5.1"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 119
+exclude = [
+    "migrations",
+]
+
+[tool.mypy]
+ignore_missing_imports = "true"
