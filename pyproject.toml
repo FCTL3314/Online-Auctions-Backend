@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "online-auctions-backend"
+version = "0.1.0"
+description = "API for online auction service."
+authors = ["Nikita Solouyou <solovev.nikita.05@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.103.1"
+python-dotenv = "^1.0.0"
+uvicorn = "^0.23.2"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.0.291"
+black = "^23.9.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
