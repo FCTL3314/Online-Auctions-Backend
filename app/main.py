@@ -1,8 +1,8 @@
 from fastapi import APIRouter, FastAPI
 
-from app.config import Config
+from app.config import config
 
-app = FastAPI(debug=Config.DEBUG)
+app = FastAPI(debug=config.DEBUG)
 router = APIRouter(prefix="/api/v1")
 
 
