@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from decimal import Decimal
 
 from sqlalchemy import String
@@ -6,7 +6,11 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.bids.models import Bid
 from app.db import Base
-from app.lots.services import lot_end_time
+from app.lots.constants import LOT_LIFE_TIME_SECONDS
+
+
+def lot_end_time() -> datetime:
+    return datetime.now() + timedelta(seconds=LOT_LIFE_TIME_SECONDS)
 
 
 class Lot(Base):

@@ -1,8 +1,10 @@
 from fastapi import APIRouter
+from fastapi_pagination import Page
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.lots.constants import LOT_TAG
-from app.lots.dependencies import LotService, ActiveLotService
+from app.lots.dependencies import LotService, ActiveLotService, ActiveLotFilter
+from app.lots.filters import LotFilter
 from app.lots.schemas import Lot, LotWithBids, LotCreate
 from dependencies import ActiveSession
 
@@ -27,15 +29,16 @@ async def lot_retrieve(
 @router.get(
     "/",
     name="lot:list",
-    response_model=list[Lot],
+    response_model=Page[Lot],
     description="Get a list of all lots.",
     tags=[LOT_TAG],
 )
 async def lot_list(
     lot_service: LotService = ActiveLotService,
+    lot_filter: LotFilter = ActiveLotFilter,
     session: AsyncSession = ActiveSession,
-) -> list[Lot]:
-    return await lot_service.list(session)
+) -> Page[Lot]:
+    return await lot_service.list(lot_filter, session)
 
 
 @router.post(

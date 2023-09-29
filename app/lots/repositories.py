@@ -4,6 +4,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.base.repositories import AbstractRepository, AbstractCreateRepository
+from app.lots.constants import LOT_ORDER_FIELDS
+from app.lots.filters import LotFilter
 from app.lots.models import Lot
 from app.lots.schemas import LotCreate
 
@@ -14,9 +16,10 @@ class LotRepository(AbstractCreateRepository, AbstractRepository):
         result = await session.execute(stmt)
         return result.scalars().first()
 
-    async def all(self, session: AsyncSession) -> Sequence[Lot]:
-        stmt = select(Lot)
-        result = await session.execute(stmt)
+    async def all(self, lot_filter: LotFilter, session: AsyncSession) -> Sequence[Lot]:
+        stmt = select(Lot).order_by(*LOT_ORDER_FIELDS)
+        filtered_stmt = lot_filter.filter(stmt)
+        result = await session.execute(filtered_stmt)
         return result.scalars().all()
 
     async def create(self, lot: LotCreate, session: AsyncSession) -> Lot:
