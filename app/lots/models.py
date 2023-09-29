@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from decimal import Decimal
 
 from sqlalchemy import String
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.bids.models import Bid
@@ -10,7 +11,7 @@ from app.lots.constants import LOT_LIFE_TIME_SECONDS
 
 
 def lot_end_time() -> datetime:
-    return datetime.now() + timedelta(seconds=LOT_LIFE_TIME_SECONDS)
+    return datetime.utcnow() + timedelta(seconds=LOT_LIFE_TIME_SECONDS)
 
 
 class Lot(Base):
@@ -38,3 +39,7 @@ class Lot(Base):
             f"starting_price={self.starting_price}, "
             f"end_time={self.end_time})"
         )
+
+    @hybrid_property
+    def is_ended(self):
+        return datetime.utcnow() > self.end_time

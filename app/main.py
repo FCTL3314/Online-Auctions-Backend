@@ -17,9 +17,7 @@ router = APIRouter(prefix="/api/v1")
     description="Check if the server is running.",
 )
 async def ping():
-    return {
-        "msg": "pong",
-    }
+    return {"msg": "pong"}
 
 
 router.include_router(lots_router, prefix="/lots")
