@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.lots.constants import LOT_TAG
 from app.lots.dependencies import LotService, ActiveLotService
-from app.lots.schemas import Lot, LotCreate
+from app.lots.schemas import Lot, LotWithBids, LotCreate
 from dependencies import ActiveSession
 
 router = APIRouter()
@@ -12,7 +12,7 @@ router = APIRouter()
 @router.get(
     "/{lot_id}/",
     name="lot:retrieve",
-    response_model=Lot,
+    response_model=LotWithBids,
     description="Get lot details by id.",
     tags=[LOT_TAG],
 )
@@ -20,7 +20,7 @@ async def lot_retrieve(
     lot_id: int,
     lot_service: LotService = ActiveLotService,
     session: AsyncSession = ActiveSession,
-) -> Lot:
+) -> LotWithBids:
     return await lot_service.retrieve(lot_id, session)
 
 

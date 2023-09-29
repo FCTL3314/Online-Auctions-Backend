@@ -26,9 +26,8 @@ class LotService(
         return await self.repository.all(session)
 
     async def create(self, lot: T, session: AsyncSession) -> T:
-        lot.end_time = self.lot_end_time
         return await self.repository.create(lot, session)
 
-    @property
-    def lot_end_time(self) -> datetime:
-        return datetime.now() + timedelta(seconds=LOT_LIFE_TIME_SECONDS)
+
+def lot_end_time() -> datetime:
+    return datetime.now() + timedelta(seconds=LOT_LIFE_TIME_SECONDS)

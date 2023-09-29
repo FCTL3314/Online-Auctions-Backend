@@ -2,6 +2,8 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
+from app.bids.schemas import Bid
+
 
 class Lot(BaseModel):
     id: int
@@ -9,6 +11,10 @@ class Lot(BaseModel):
     description: str
     starting_price: float
     end_time: datetime
+
+
+class LotWithBids(Lot):
+    bids: list[Bid] = []
 
 
 class LotCreate(Lot):
