@@ -2,10 +2,12 @@ from fastapi import APIRouter
 from fastapi_pagination import Page
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.lots.constants import BID_TAG
+from app.lots.services import BidService
 from app.lots.constants import LOT_TAG
-from app.lots.dependencies import LotService, ActiveLotService, ActiveLotFilter
+from app.lots.dependencies import LotService, ActiveLotService, ActiveLotFilter, ActiveBidService
 from app.lots.filters import LotFilter
-from app.lots.schemas import Lot, LotWithBids, LotCreate
+from app.lots.schemas import Lot, LotWithBids, LotCreate, Bid, BidCreate
 from dependencies import ActiveSession
 
 router = APIRouter()
@@ -54,3 +56,19 @@ async def lot_create(
     session: AsyncSession = ActiveSession,
 ) -> Lot:
     return await lot_service.create(lot, session)
+
+
+@router.post(
+    "/{lot_id}/bids",
+    name="bid:create",
+    response_model=Bid,
+    description="Creates a new bid.",
+    tags=[BID_TAG],
+)
+async def bid_create(
+    lot_id: int,
+    bid: BidCreate,
+    bid_service: BidService = ActiveBidService,
+    session: AsyncSession = ActiveSession,
+) -> Bid:
+    return await bid_service.create(lot_id, bid, session)

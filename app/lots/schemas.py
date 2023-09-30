@@ -1,15 +1,25 @@
 from datetime import datetime
+from decimal import Decimal
 
 from pydantic import BaseModel
 
-from app.bids.schemas import Bid
+
+class Bid(BaseModel):
+    id: int
+    amount: Decimal
+    created_at: datetime
+
+
+class BidCreate(Bid):
+    id: int | None = None  # type: ignore[assignment]
+    created_at: datetime | None = None  # type: ignore[assignment]
 
 
 class Lot(BaseModel):
     id: int
     title: str
     description: str
-    starting_price: float
+    starting_price: Decimal
     end_time: datetime
 
 
