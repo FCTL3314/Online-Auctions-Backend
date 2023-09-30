@@ -5,6 +5,7 @@ You can view all project endpoints at: http://127.0.0.1:8000/docs
 > The project was created as a test task.
 
 # ❕ Peculiarities
+* The application follows a layered architecture, each layer of the application is responsible for its own logic.
 * When logging in, you need to enter your email in the username field, this is a peculiarity of the FastAPI-Users library.
 * Sending email letters to the winners of the lot is implemented through scheduled celery tasks, the frequency is 1 minute.
 * The project is completely covered by tests using pytest library.
