@@ -12,6 +12,8 @@ from app.lots.constants import LOT_ORDER_FIELDS
 from app.lots.filters import LotFilter
 from app.lots.models import Lot, Bid
 from app.lots.schemas import LotCreate, Bid as BidSchema
+from app.users.models import User
+from app.users.schemas import UserRead
 
 
 class LotRepository(
@@ -45,13 +47,26 @@ class LotRepository(
 class BidRepository(AbstractCreateRepository):
     base_query = select(Bid)
 
+    async def winning_bids(self, session: AsyncSession) -> Sequence[Bid]:
+        query = (
+            self.base_query
+            .join(Lot, Bid.lot_id == Lot.id)
+            .where(Lot.is_ended.is_(True))  # noqa
+            .order_by(Bid.lot_id.desc(), Bid.amount.desc())
+            .distinct(Bid.lot_id)
+        )
+        result = await session.execute(query)
+        return result.scalars().all()
+
     async def max_bid(self, lot_id: int, session: AsyncSession) -> Bid | None:
         query = self.base_query.where(Lot.id == lot_id).order_by(Bid.amount.desc())
         result = await session.execute(query)
         return result.scalars().first()
 
-    async def create(self, lot_id: int, bid: BidSchema, session: AsyncSession) -> Bid:
-        bid = Bid(amount=bid.amount, lot_id=lot_id)
+    async def create(
+        self, lot_id: int, bid: BidSchema, user: UserRead, session: AsyncSession
+    ) -> Bid:
+        bid = Bid(amount=bid.amount, lot_id=lot_id, user_id=user.id)
         session.add(bid)
         await session.commit()
         await session.refresh(bid)

@@ -54,5 +54,8 @@ class Bid(Base):
 
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
 
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    user = relationship("User", back_populates="bids")
+
     def __repr__(self):
         return f"Bid({self.id=}, {self.amount=})"

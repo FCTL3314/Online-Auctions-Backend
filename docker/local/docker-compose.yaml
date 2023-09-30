@@ -12,3 +12,26 @@ services:
       - ../../data/postgresql:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+
+  rabbitmq:
+    image: rabbitmq:alpine
+
+  celery:
+    build:
+      context: ../../
+      dockerfile: docker/local/Dockerfile
+    volumes:
+      - ../../:/opt/OnlineAuctions/
+    entrypoint: docker/local/celery_entrypoint.sh
+    depends_on:
+      - rabbitmq
+
+  celery-beat:
+    build:
+      context: ../../
+      dockerfile: docker/local/Dockerfile
+    volumes:
+      - ../../:/opt/OnlineAuctions/
+    entrypoint: docker/local/celery_beat_entrypoint.sh
+    depends_on:
+      - rabbitmq

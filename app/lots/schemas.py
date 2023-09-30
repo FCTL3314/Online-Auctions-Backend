@@ -8,11 +8,13 @@ class Bid(BaseModel):
     id: int
     amount: Decimal
     created_at: datetime
+    user_id: int
 
 
 class BidCreate(Bid):
     id: int | None = None  # type: ignore[assignment]
     created_at: datetime | None = None  # type: ignore[assignment]
+    user_id: int | None = None  # type: ignore[assignment]
 
 
 class Lot(BaseModel):

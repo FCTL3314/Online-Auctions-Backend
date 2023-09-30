@@ -2,6 +2,7 @@ from decimal import Decimal
 from typing import Generic
 
 from fastapi import HTTPException
+from fastapi_mail import MessageSchema, MessageType, FastMail
 from fastapi_pagination import paginate, Page
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -11,11 +12,14 @@ from app.base.services import (
     AbstractCreateService,
     T,
     REPO_T,
+    AbstractService,
 )
 from app.lots.constants import LOT_NOT_FOUND_MESSAGE, MIN_NEW_BID_PERCENT
 from app.lots.filters import LotFilter
-from app.lots.models import Lot
-from app.lots.repositories import LotRepository
+from app.lots.models import Lot, Bid
+from app.lots.repositories import LotRepository, BidRepository
+from app.mailing import mail_conf
+from app.users.schemas import UserRead
 from app.utils import is_obj_exists_or_404
 
 
@@ -40,12 +44,17 @@ class LotService(
 class BidService(AbstractCreateService, Generic[T, REPO_T]):
     lot_repository = LotRepository()
 
-    async def create(self, lot_id: int, bid: T, session: AsyncSession) -> T:
+    async def create(
+        self, lot_id: int, bid: T, user: UserRead, session: AsyncSession
+    ) -> T:
         lot = await self.lot_repository.get(lot_id, session)
         is_obj_exists_or_404(lot, LOT_NOT_FOUND_MESSAGE)
         self.validate_bid_more_than_lot_starting_price(bid, lot)
         await self.validate_bid_more_than_current_max_bid(lot_id, bid, session)
-        return await self.repository.create(lot_id, bid, session)
+
+        a = await BidWinnerDeterminerService(BidRepository()).execute(session)
+
+        return await self.repository.create(lot_id, bid, user, session)
 
     @staticmethod
     def validate_bid_more_than_lot_starting_price(bid: T, lot: Lot) -> None:
@@ -66,3 +75,24 @@ class BidService(AbstractCreateService, Generic[T, REPO_T]):
                 detail=f"The bid amount must be 5 percent more than the current maximum bid.",
                 status_code=400,
             )
+
+
+class BidWinnerDeterminerService(AbstractService):
+    async def execute(self, session: AsyncSession):
+        bids = await self.repository.winning_bids(session)
+        message = MessageSchema(
+            subject="Your bid has won!",
+            recipients=self._extract_emails(bids),
+            body=(
+                """
+                Your bet has won, to pick up the lot, go to the site.
+                """
+            ),
+            subtype=MessageType.plain,
+        )
+        fm = FastMail(mail_conf)
+        await fm.send_message(message)
+
+    @staticmethod
+    def _extract_emails(bids: list[Bid]) -> list[str]:
+        return [bid.user.email for bid in bids]

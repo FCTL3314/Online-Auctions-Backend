@@ -6,7 +6,7 @@ authors = ["Nikita Solouyou <solovev.nikita.05@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10"
 fastapi = "^0.103.1"
 python-dotenv = "^1.0.0"
 uvicorn = "^0.23.2"
@@ -16,6 +16,9 @@ alembic = "^1.12.0"
 pydantic-settings = "^2.0.3"
 fastapi-filter = "^1.0.0"
 fastapi-pagination = "^0.12.10"
+celery = "^5.3.4"
+eventlet = "^0.33.3"
+fastapi-mail = "^1.4.1"
 
 
 [tool.poetry.group.dev.dependencies]

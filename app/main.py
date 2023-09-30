@@ -1,9 +1,9 @@
 from fastapi import APIRouter, FastAPI
 
 from app.config import config
+from app.dependencies import load_fastapi_dependencies
 from app.lots.routes import router as lots_router
 from app.users.routes import router as users_router
-from dependencies import load_fastapi_dependencies
 
 app = FastAPI(debug=config.DEBUG)
 load_fastapi_dependencies(app)

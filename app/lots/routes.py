@@ -2,13 +2,20 @@ from fastapi import APIRouter
 from fastapi_pagination import Page
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.dependencies import ActiveSession
 from app.lots.constants import BID_TAG
-from app.lots.services import BidService
 from app.lots.constants import LOT_TAG
-from app.lots.dependencies import LotService, ActiveLotService, ActiveLotFilter, ActiveBidService
+from app.lots.dependencies import (
+    LotService,
+    ActiveLotService,
+    ActiveLotFilter,
+    ActiveBidService,
+)
 from app.lots.filters import LotFilter
 from app.lots.schemas import Lot, LotWithBids, LotCreate, Bid, BidCreate
-from dependencies import ActiveSession
+from app.lots.services import BidService
+from app.users.dependencies import ActiveUser
+from app.users.schemas import UserRead
 
 router = APIRouter()
 
@@ -68,7 +75,8 @@ async def lot_create(
 async def bid_create(
     lot_id: int,
     bid: BidCreate,
+    user: UserRead = ActiveUser,
     bid_service: BidService = ActiveBidService,
     session: AsyncSession = ActiveSession,
 ) -> Bid:
-    return await bid_service.create(lot_id, bid, session)
+    return await bid_service.create(lot_id, bid, user, session)
