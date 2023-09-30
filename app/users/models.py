@@ -6,16 +6,16 @@ from app.db import Base
 
 
 class User(SQLAlchemyBaseUserTable[int], Base):
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True)  # type: ignore[assignment]
     name: Mapped[str] = mapped_column(String(32))
 
     def __repr__(self):
         return (
-            f"User(id={self.id}, "
-            f"name={self.name}, "
-            f"email={self.email}, "
-            f"hashed_password={self.hashed_password}, "
-            f"is_active={self.is_active}, "
-            f"is_superuser={self.is_superuser}, "
-            f"is_verified={self.is_verified})"
+            f"User({self.id=}, "
+            f"{self.name=}, "
+            f"{self.email=}, "
+            f"{self.hashed_password=}, "
+            f"{self.is_active=}, "
+            f"{self.is_superuser=}, "
+            f"{self.is_verified=})"
         )

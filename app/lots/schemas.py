@@ -18,5 +18,5 @@ class LotWithBids(Lot):
 
 
 class LotCreate(Lot):
-    id: int | None = None
-    end_time: datetime | None = None
+    id: int | None = None  # type: ignore[assignment]
+    end_time: datetime | None = None  # type: ignore[assignment]

@@ -19,4 +19,4 @@ class Bid(Base):
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
 
     def __repr__(self):
-        return f"Bid(id={self.id}, amount={self.amount})"
+        return f"Bid({self.id=}, {self.amount=})"

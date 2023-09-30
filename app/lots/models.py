@@ -32,12 +32,11 @@ class Lot(Base):
 
     def __repr__(self):
         return (
-            f"Lot("
-            f"id={self.id}, "
-            f"title={self.title}, "
-            f"description={self.description}, "
-            f"starting_price={self.starting_price}, "
-            f"end_time={self.end_time})"
+            f"Lot({self.id=}, "
+            f"{self.title=}, "
+            f"{self.description=}, "
+            f"{self.starting_price=}, "
+            f"{self.end_time=})"
         )
 
     @hybrid_property

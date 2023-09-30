@@ -7,8 +7,8 @@ from app.lots.schemas import Lot
 from app.lots.services import LotService
 
 
-def lot_service() -> LotService[Lot]:
-    return LotService[Lot](LotRepository())
+def lot_service() -> LotService[Lot, LotRepository]:
+    return LotService[Lot, LotRepository](LotRepository())
 
 
 ActiveLotService = Depends(lot_service)
