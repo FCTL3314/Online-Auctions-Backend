@@ -4,15 +4,16 @@ Online auctions is a FastAPI-based application that implements a platform for cr
 You can view all project endpoints at: http://127.0.0.1:8000/docs
 > The project was created as a test task.
 
+# ❕ Peculiarities
+* When logging in, you need to enter your email in the username field, this is a peculiarity of the FastAPI-Users library.
+* Sending email letters to the winners of the lot is implemented through scheduled celery tasks, the frequency is 1 minute.
+* The project is completely covered by tests using pytest library.
+
 # 💽 Installation
 
 1. #### Clone or download the repository.
 2. #### Rename .env.dist to .env and populate it with all "Mailing" section variables.
 3. #### Run docker services: `docker-compose up -d`
-
-# ❕ Peculiarities
-* When logging in, you need to enter your email in the username field, this is a peculiarity of the FastAPI-Users library.
-* Sending email letters to the winners of the lot is implemented through scheduled celery tasks, the frequency is 1 minute.
 
 # 🌄 Demonstration
 
