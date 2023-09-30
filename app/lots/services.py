@@ -17,7 +17,7 @@ from app.base.services import (
 from app.lots.constants import LOT_NOT_FOUND_MESSAGE, MIN_NEW_BID_PERCENT
 from app.lots.filters import LotFilter
 from app.lots.models import Lot, Bid
-from app.lots.repositories import LotRepository, BidRepository
+from app.lots.repositories import LotRepository
 from app.mailing import mail_conf
 from app.users.schemas import UserRead
 from app.utils import is_obj_exists_or_404
@@ -51,16 +51,13 @@ class BidService(AbstractCreateService, Generic[T, REPO_T]):
         is_obj_exists_or_404(lot, LOT_NOT_FOUND_MESSAGE)
         self.validate_bid_more_than_lot_starting_price(bid, lot)
         await self.validate_bid_more_than_current_max_bid(lot_id, bid, session)
-
-        a = await BidWinnerDeterminerService(BidRepository()).execute(session)
-
         return await self.repository.create(lot_id, bid, user, session)
 
     @staticmethod
     def validate_bid_more_than_lot_starting_price(bid: T, lot: Lot) -> None:
         if bid.amount <= lot.starting_price:
             raise HTTPException(
-                detail=f"The bid amount should be greater then lot starting price.",
+                detail="The bid amount should be greater then lot starting price.",
                 status_code=400,
             )
 
@@ -72,7 +69,7 @@ class BidService(AbstractCreateService, Generic[T, REPO_T]):
             MIN_NEW_BID_PERCENT
         ):
             raise HTTPException(
-                detail=f"The bid amount must be 5 percent more than the current maximum bid.",
+                detail="The bid amount must be 5 percent more than the current maximum bid.",
                 status_code=400,
             )
 

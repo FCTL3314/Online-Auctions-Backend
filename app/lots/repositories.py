@@ -12,7 +12,6 @@ from app.lots.constants import LOT_ORDER_FIELDS
 from app.lots.filters import LotFilter
 from app.lots.models import Lot, Bid
 from app.lots.schemas import LotCreate, Bid as BidSchema
-from app.users.models import User
 from app.users.schemas import UserRead
 
 
@@ -49,8 +48,7 @@ class BidRepository(AbstractCreateRepository):
 
     async def winning_bids(self, session: AsyncSession) -> Sequence[Bid]:
         query = (
-            self.base_query
-            .join(Lot, Bid.lot_id == Lot.id)
+            self.base_query.join(Lot, Bid.lot_id == Lot.id)
             .where(Lot.is_ended.is_(True))  # noqa
             .order_by(Bid.lot_id.desc(), Bid.amount.desc())
             .distinct(Bid.lot_id)
