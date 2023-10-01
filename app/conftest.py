@@ -24,7 +24,7 @@ async def override_get_session() -> AsyncGenerator:
 app.dependency_overrides[get_session] = override_get_session  # noqa
 
 
-@pytest.fixture(autouse=True, scope="session")
+@pytest.fixture(autouse=True)
 async def prepare_database() -> None:
     """
     Creates the test database when tests run, deletes
@@ -32,6 +32,8 @@ async def prepare_database() -> None:
     """
     async with test_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        yield
+        await conn.run_sync(Base.metadata.drop_all)
 
 
 @pytest.fixture(scope="session")
@@ -79,6 +81,13 @@ async def lot(session: AsyncSession) -> AsyncGenerator[Base, None]:
 
 @pytest.fixture()
 async def bid(lot: Lot, session: AsyncSession) -> AsyncGenerator[Base, None]:
-    submenu = await create_test_object("app.bids.models.Bid", session, lot_id=lot.id)
+    submenu = await create_test_object("app.lots.models.Bid", session, lot_id=lot.id)
     yield submenu
     await remove_test_object(submenu, session)
+
+
+@pytest.fixture()
+async def user(session: AsyncSession) -> AsyncGenerator[Base, None]:
+    user = await create_test_object("app.users.models.User", session)
+    yield user
+    await remove_test_object(user, session)

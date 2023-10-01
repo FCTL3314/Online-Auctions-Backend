@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from fastapi import APIRouter
 from fastapi_pagination import Page
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -54,6 +56,7 @@ async def lot_list(
     "/",
     name="lot:create",
     response_model=Lot,
+    status_code=HTTPStatus.CREATED,
     description="Creates a new lot.",
     tags=[LOT_TAG],
 )

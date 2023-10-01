@@ -26,4 +26,9 @@ async def get_user_manager(user_db=UserDB) -> AsyncGenerator[UserManager, None]:
 
 fastapi_users = FastAPIUsers[User, int](get_user_manager, [auth_backend])
 
-ActiveUser = Depends(fastapi_users.current_user(active=True))
+
+async def get_current_active_user():
+    return fastapi_users.current_user(active=True)
+
+
+ActiveUser = Depends(get_current_active_user)
