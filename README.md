@@ -14,7 +14,7 @@ You can view all project endpoints at: http://127.0.0.1:8000/docs
 
 1. #### Clone or download the repository.
 2. #### Rename .env.dist to .env and populate it with all "Mailing" section variables.
-3. #### Run docker services: `docker-compose up -d`
+3. #### Run docker services: `docker-compose -f docker/local/docker-compose.yaml up -d`
 
 # 🌄 Demonstration
 
