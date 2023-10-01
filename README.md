@@ -17,7 +17,7 @@ You can view all project endpoints at: http://127.0.0.1:8000/docs
 3. #### Activate environment % install dependencies: `poetry shell` & `poetry install`
 4. #### Run docker services: `docker-compose -f docker/local/docker-compose.yaml up -d`
 5. #### Apply migrations: `alembic revision --autogenerate` & `alembic upgrade head`
-6. #### Run server: `uvicorn run uvicorn app.main:app --reload`
+6. #### Run server: `uvicorn app.main:app --reload`
 
 # 🌄 Demonstration
 
