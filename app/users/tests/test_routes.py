@@ -14,7 +14,7 @@ async def test_register_route(client: AsyncClient, session: AsyncSession):
     data = {
         "name": "TestName",
         "email": "email@example.com",
-        "password": "*%&$#(%*$&$#*%&"
+        "password": "*%&$#(%*$&$#*%&",
     }
     response = await client.post("api/v1/users/register", json=data)
 

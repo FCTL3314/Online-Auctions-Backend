@@ -4,9 +4,9 @@ from app.lots.repositories import BidRepository
 from app.lots.services import BidWinnerDeterminerService
 
 
-def determinate_auction_winner_service():
+async def determinate_auction_winner_service():
     async with scoped_session() as session:
-        BidWinnerDeterminerService(BidRepository()).execute(session)
+        await BidWinnerDeterminerService(BidRepository()).execute(session)
 
 
 @celery.task

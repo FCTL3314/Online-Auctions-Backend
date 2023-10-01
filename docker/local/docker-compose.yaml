@@ -35,3 +35,17 @@ services:
     entrypoint: docker/local/celery_beat_entrypoint.sh
     depends_on:
       - rabbitmq
+
+  web:
+    build:
+      context: ../../
+      dockerfile: docker/local/Dockerfile
+    volumes:
+      - ../../:/opt/OnlineAuctions/
+    entrypoint: docker/local/web_entrypoint.sh
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - celery
+      - celery-beat
